@@ -1,0 +1,28 @@
+query PlanQuery($from: InputCoordinates!, $to: InputCoordinates!) {
+  plan(from: $from, to: $to) {
+    itineraries {
+      startTime
+      endTime
+      duration
+      legs {
+        duration
+        mode
+        route {
+          shortName
+          longName
+          mode
+        }
+        from {
+          stop {
+            name
+          }
+        }
+        to {
+          stop {
+            name
+          }
+        }
+      }
+    }
+  }
+}

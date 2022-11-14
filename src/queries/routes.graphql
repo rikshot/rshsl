@@ -1,0 +1,8 @@
+query RoutesQuery($route: String) {
+  routes(name: $route, transportModes: BUS) {
+    gtfsId
+    shortName
+    longName
+    mode
+  }
+}

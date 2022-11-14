@@ -1,0 +1,18 @@
+[package]
+name = "rshsl"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "*", features = ["full"] }
+reqwest = { version = "*", features = ["json"] }
+graphql_client = "*"
+serde = "*"
+tui = "*"
+crossterm = "*"
+unicode-width = "*"
+tracing = "*"
+tracing-subscriber = { version = "*", features = ["env-filter"] }
+tracing-appender = "*"
+anyhow = { version = "*", features = ["backtrace"] }
+chrono = "*"
