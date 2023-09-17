@@ -3,16 +3,16 @@ use std::{sync::Arc, time::Duration};
 use anyhow::anyhow;
 use anyhow::Result;
 use crossterm::event::{self, Event, KeyCode};
-use reqwest::Client;
-use serde::Deserialize;
-use tokio::sync::{Notify, RwLock};
-use tui::{
+use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     widgets::{Block, Borders, List, ListItem, ListState, Paragraph},
     Terminal,
 };
+use reqwest::Client;
+use serde::Deserialize;
+use tokio::sync::{Notify, RwLock};
 use unicode_width::UnicodeWidthStr;
 
 #[derive(Deserialize, Debug, Clone)]
@@ -38,7 +38,8 @@ pub struct Properties {
 
 async fn get_locations(client: &Client, query: &str) -> Result<LocationResponse> {
     let request = client
-        .get("http://api.digitransit.fi/geocoding/v1/search")
+        .get("http://api.digitransit.fi/geocoding/v1/autocomplete")
+        .header("digitransit-subscription-key", include_str!("../.apikey"))
         .query(&[("text", query)]);
     Ok(request.send().await?.json().await?)
 }
@@ -82,7 +83,7 @@ pub async fn get_location<B: Backend>(terminal: &mut Terminal<B>) -> Result<Feat
                     .margin(1)
                     .split(frame.size());
 
-                let input_block = Paragraph::new(input.as_ref())
+                let input_block = Paragraph::new(input.clone())
                     .block(Block::default().title("Location").borders(Borders::ALL));
                 frame.set_cursor(chunks[0].x + input.width() as u16 + 1, chunks[0].y + 1);
                 frame.render_widget(input_block, chunks[0]);

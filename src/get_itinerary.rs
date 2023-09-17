@@ -7,18 +7,18 @@ use anyhow::Result;
 use chrono::{Local, TimeZone};
 use crossterm::event::{self, Event, KeyCode};
 use graphql_client::{GraphQLQuery, Response};
+use ratatui::{
+    backend::Backend,
+    layout::{Alignment, Constraint, Direction, Layout},
+    style::{Color, Modifier, Style},
+    text::{Line, Span},
+    widgets::{Block, Borders, Paragraph},
+    Terminal,
+};
 use reqwest::Client;
 use std::sync::atomic::Ordering::Relaxed;
 use tokio::sync::RwLock;
 use tracing::info;
-use tui::{
-    backend::Backend,
-    layout::{Alignment, Constraint, Direction, Layout},
-    style::{Color, Modifier, Style},
-    text::{Span, Spans},
-    widgets::{Block, Borders, Paragraph},
-    Terminal,
-};
 
 use crate::get_location::Feature;
 
@@ -105,6 +105,7 @@ pub async fn get_itinerary<B: Backend>(
                     updating.store(true, Relaxed);
                     let response: Response<plan_query::ResponseData> = client
                         .post("https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql")
+                        .header("digitransit-subscription-key", include_str!("../.apikey"))
                         .json(&body)
                         .send()
                         .await?
@@ -203,11 +204,11 @@ pub async fn get_itinerary<B: Backend>(
                             };
                             frame.render_widget(
                                 Paragraph::new(vec![
-                                    Spans::from(Span::styled(
+                                    Line::from(Span::styled(
                                         from_stop_name,
                                         Style::default().add_modifier(Modifier::REVERSED),
                                     )),
-                                    Spans::from(Span::raw(if *mode == Mode::WALK {
+                                    Line::from(Span::raw(if *mode == Mode::WALK {
                                         format!(
                                             "\u{1F6B6} {}",
                                             format_duration(&Duration::from_secs_f64(
@@ -236,7 +237,7 @@ pub async fn get_itinerary<B: Backend>(
                                             ))
                                         )
                                     })),
-                                    Spans::from(Span::styled(
+                                    Line::from(Span::styled(
                                         to_stop_name,
                                         Style::default().add_modifier(Modifier::REVERSED),
                                     )),

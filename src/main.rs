@@ -6,8 +6,8 @@ use crossterm::{
 };
 
 use graphql_client::GraphQLQuery;
+use ratatui::{backend::CrosstermBackend, Terminal};
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
-use tui::{backend::CrosstermBackend, Terminal};
 
 use anyhow::Result;
 

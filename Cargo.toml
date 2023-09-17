@@ -8,7 +8,7 @@ tokio = { version = "*", features = ["full"] }
 reqwest = { version = "*", features = ["json"] }
 graphql_client = "*"
 serde = "*"
-tui = "*"
+ratatui = "*"
 crossterm = "*"
 unicode-width = "*"
 tracing = "*"
@@ -16,3 +16,4 @@ tracing-subscriber = { version = "*", features = ["env-filter"] }
 tracing-appender = "*"
 anyhow = { version = "*", features = ["backtrace"] }
 chrono = "*"
+async-trait = "*"
